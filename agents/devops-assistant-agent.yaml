@@ -26,11 +26,6 @@ model:
   connection:
     kind: remote
     endpoint: =Env.AZURE_FOUNDRY_PROJECT_ENDPOINT
-  options:
-    temperature: 0.4
-    maxOutputTokens: 4000
-    topP: 0.9
-    allowMultipleToolCalls: true
 
 tools:
   - kind: mcp

@@ -24,11 +24,6 @@ model:
   connection:
     kind: remote
     endpoint: =Env.AZURE_FOUNDRY_PROJECT_ENDPOINT
-  options:
-    temperature: 0.7
-    maxOutputTokens: 2000
-    topP: 0.95
-    allowMultipleToolCalls: true
 
 tools:
   - kind: file_search

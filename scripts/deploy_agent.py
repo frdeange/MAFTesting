@@ -48,13 +48,6 @@ async def deploy_agent(yaml_file: str) -> None:
         print(f"✅ Agent deployed successfully!")
         print(f"   Name: {agent.name}")
         print(f"   Description: {agent.description or 'N/A'}")
-        
-        # Optional: Quick health check
-        print(f"🔍 Running health check...")
-        async with agent:
-            response = await agent.run("ping")
-            print(f"   Response received: ✅")
-        
         print(f"\n🎉 Agent '{agent.name}' is now available in Azure AI Foundry")
         
     except Exception as e:

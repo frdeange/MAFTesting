@@ -42,6 +42,7 @@ class AgentYAMLValidator:
         self._validate_kind()
         self._validate_model()
         self._validate_tools()
+        self._validate_azure_ai_restrictions()
         self._check_powerfx_expressions()
         
         return len(self.errors) == 0
@@ -134,6 +135,24 @@ class AgentYAMLValidator:
             elif tool_kind == "custom":
                 if "name" not in tool:
                     self.errors.append(f"Tool #{i+1}: 'custom' tool requires 'name'")
+    
+    def _validate_azure_ai_restrictions(self):
+        """Validate Azure AI Foundry specific restrictions."""
+        model = self.agent_data.get("model")
+        if not model:
+            return
+        
+        # Check if model.options is specified (not allowed for declarative agents)
+        if "options" in model:
+            self.errors.append(
+                "model.options is not allowed for declarative agents in Azure AI Foundry. "
+                "Remove temperature, maxOutputTokens, topP, etc. from model configuration."
+            )
+            # List the specific options found
+            options = model["options"]
+            if isinstance(options, dict):
+                option_names = list(options.keys())
+                self.errors.append(f"  Found options: {', '.join(option_names)}")
     
     def _check_powerfx_expressions(self):
         """Find and report PowerFx expressions."""

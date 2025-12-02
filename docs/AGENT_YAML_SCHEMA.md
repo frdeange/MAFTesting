@@ -281,6 +281,17 @@ model:
 
 ## ModelOptions
 
+> ⚠️ **IMPORTANT**: `model.options` is **NOT supported** for declarative agents in Azure AI Foundry.
+> 
+> When creating agents with `kind: Prompt` that will be deployed to Azure AI Foundry, you **cannot** specify model options like `temperature`, `maxOutputTokens`, `topP`, etc.
+> 
+> **This will cause a deployment error:**
+> ```
+> Error: ValidationError - Not allowed when agent is specified (temperature, top_p, etc.)
+> ```
+> 
+> Model options are only available when using chat clients directly (not declarative agents).
+
 LLM model configuration options.
 
 ### Complete Structure
