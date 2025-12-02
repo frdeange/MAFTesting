@@ -1,0 +1,2 @@
+agent-framework==1.0.0b251120
+agent-framework-declarative==1.0.0b251120

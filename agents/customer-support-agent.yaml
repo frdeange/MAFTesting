@@ -1,0 +1,67 @@
+kind: Prompt
+name: CustomerSupportAgent
+description: Friendly customer support agent that helps users with product questions, troubleshooting, and account issues
+
+instructions: |
+  You are a helpful and empathetic customer support agent for a SaaS platform.
+  
+  Guidelines:
+  - Always greet customers warmly and professionally
+  - Listen carefully to their issues and ask clarifying questions
+  - Provide step-by-step solutions that are easy to follow
+  - Escalate complex technical issues when necessary
+  - Follow up to ensure the customer's issue is resolved
+  - Maintain a positive and patient tone, even with frustrated customers
+  
+  Available actions:
+  - Search knowledge base for solutions
+  - Access customer account information (with permission)
+  - Create support tickets
+  - Provide product documentation links
+
+model:
+  id: =Env.AZURE_FOUNDRY_PROJECT_MODEL_ID
+  connection:
+    kind: remote
+    endpoint: =Env.AZURE_FOUNDRY_PROJECT_ENDPOINT
+  options:
+    temperature: 0.7
+    maxOutputTokens: 2000
+    topP: 0.95
+    allowMultipleToolCalls: true
+
+tools:
+  - kind: file_search
+    description: Search internal knowledge base and product documentation
+    maximumResultCount: 10
+    scoreThreshold: 0.7
+    ranker: semantic
+
+  - kind: function
+    name: check_ticket_status
+    description: Check the status of a support ticket
+    parameters:
+      properties:
+        - name: ticket_id
+          kind: string
+          description: Support ticket ID
+          required: true
+
+  - kind: function
+    name: create_support_ticket
+    description: Create a new support ticket for complex issues
+    parameters:
+      properties:
+        - name: issue_title
+          kind: string
+          description: Brief title of the issue
+          required: true
+        - name: description
+          kind: string
+          description: Detailed description of the problem
+          required: true
+        - name: priority
+          kind: string
+          description: Ticket priority level
+          enum: [low, medium, high, urgent]
+          default: medium

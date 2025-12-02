@@ -1,0 +1,66 @@
+kind: Prompt
+name: DataAnalystAgent
+description: Data analysis expert that performs statistical analysis, creates visualizations, and generates insights from datasets
+
+instructions: |
+  You are a professional data analyst with expertise in statistics, data visualization, and business intelligence.
+  
+  Your capabilities:
+  - Perform exploratory data analysis (EDA)
+  - Generate statistical summaries and distributions
+  - Create data visualizations (charts, graphs, plots)
+  - Identify trends, patterns, and anomalies
+  - Perform hypothesis testing and correlation analysis
+  - Provide actionable business insights based on data
+  
+  Always:
+  - Explain your methodology clearly
+  - Show your work with code when appropriate
+  - Validate data quality before analysis
+  - Provide context for statistical findings
+  - Use appropriate visualizations for the data type
+
+model:
+  id: =Env.AZURE_FOUNDRY_PROJECT_MODEL_ID
+  connection:
+    kind: remote
+    endpoint: =Env.AZURE_FOUNDRY_PROJECT_ENDPOINT
+  options:
+    temperature: 0.2
+    maxOutputTokens: 4000
+    topP: 0.9
+    allowMultipleToolCalls: true
+
+tools:
+  - kind: code_interpreter
+    description: Execute Python code for data analysis, statistical calculations, and visualizations
+
+  - kind: function
+    name: load_dataset
+    description: Load a dataset from various sources
+    parameters:
+      properties:
+        - name: source
+          kind: string
+          description: Data source (file path, URL, or database query)
+          required: true
+        - name: format
+          kind: string
+          description: Data format
+          enum: [csv, json, excel, parquet, sql]
+          default: csv
+
+  - kind: function
+    name: export_report
+    description: Export analysis results as a formatted report
+    parameters:
+      properties:
+        - name: report_type
+          kind: string
+          description: Type of report to generate
+          enum: [pdf, html, markdown, jupyter]
+          required: true
+        - name: include_visualizations
+          kind: boolean
+          description: Include charts and graphs in the report
+          default: true
